@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <form method="post" action="/search">
+        <input type="radio" id="search_type" name="search_type" value="title" checked>
+        <input type="radio" id="search_type2" name="search_type" value="actor">
+        <input type="radio" id="search_type3" name="search_type" value="overview">
+        <input type="radio" id="search_type4" name="search_type" value="overview_content">
+        <br>
+        <input type="text" name="search_query" placeholder="Enter {{ search_type }} here" value="{{ search_query }}">
+        <br>
+        <input type="submit" value="Search">
+    </form>
+
+    <!-- Display search results -->
+    {% if search_result %}
+    <h2>Search Results:</h2>
+    <ul>
+        {% for item in search_result %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>
