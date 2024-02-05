@@ -1,6 +1,9 @@
 from flask import Flask, render_template, request
 import rdflib
+from flask import jsonify
 
+
+# from recommendations_model import load_data,recommend
 app = Flask(__name__)
 
 # Initialize RDF graph and parse RDF data file
@@ -28,6 +31,7 @@ def search_overview_content(words) -> list:
     result = [str(row[0]) for row in query_result]
 
     return result
+
 
 def search_overview(title) -> list:
     global g
@@ -66,34 +70,42 @@ def search_title(title) -> list:
     return result
 
 
-def actor_search(actor_name) -> list:
+def actor_search(title) -> list:
     global g
-    query = """
+    query = f"""
     PREFIX : <https://www.themoviedb.org/kaggle-export/> 
-    SELECT ?movie_title
-    WHERE {
+    SELECT ?actor
+    WHERE {{
         ?movie a :Movie;
-            :overview ?overview;
-            :title ?movie_title.
-        FILTER(CONTAINS(UCASE(?overview), UCASE("%s")))
-    }""" % actor_name.upper()
+            :title "{title}";
+            :cast/:name ?actor.
+    }}"""
 
     query_result = g.query(query)
     result = [row[0] for row in query_result]
     return result
 
 
+# def recommended_titles(title) -> list:
+#     movies = load_data()
+#     return recommend(title, movies)
+
+@app.route("/getOverview")
+def getOverview():
+    title = request.args.get("title")
+    overview = search_overview(title)
+    return jsonify(overview)
+
+
 # Define routes
 @app.route("/")
 def index():
-    return render_template("index.html", title="movieFinder", search_type=search_type, search_query=search_query)
-
+    return render_template("index.html", title="Find The Movie with AI", search_type=search_type, search_query=search_query)
 @app.route("/search", methods=["POST"])
 def search():
     global search_type
     global search_query
     search_result = []
-
     # Get the search type and query from the form
     search_type = request.form["search_type"]
     search_query = request.form["search_query"]
@@ -142,7 +154,8 @@ def search():
     else:
         search_result = []  # Handle other search types here if needed
 
-    return render_template("index.html", title="movieFinder", search_type=search_type, search_query=search_query, search_result=search_result)
+    return render_template("index.html", title="Find The Movie with AI", search_type=search_type, search_query=search_query, search_result=search_result)
+
 
 # Run the Flask app
 if __name__ == "__main__":
