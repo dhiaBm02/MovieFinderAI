@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import rdflib
 from flask import jsonify
-
+from recommendations_model import recommend,load_data,before_serevr
 
 # from recommendations_model import load_data,recommend
 app = Flask(__name__)
@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Initialize RDF graph and parse RDF data file
 g = rdflib.Graph()
 g.parse("IAI_Team4_MovieFinder/TMDB.ttl", format='turtle')
-
+nn_model,movies=before_serevr()
 # Initialize variables to store search type and query
 search_type = "title"
 search_query = ""
@@ -86,9 +86,8 @@ def actor_search(title) -> list:
     return result
 
 
-# def recommended_titles(title) -> list:
-#     movies = load_data()
-#     return recommend(title, movies)
+def recommended_titles(title) -> list:
+    return recommend(title, nn_model,movies)
 
 @app.route("/getOverview")
 def getOverview():
@@ -115,10 +114,10 @@ def search():
     if search_type == "title":
         try:
             print("searching title")
-            title_result = search_title(search_query)
-            title_result_strings = [title.toPython() for title in title_result]
-            search_result = title_result_strings
-            print(title_result_strings)
+            title_result = recommended_titles(search_query)
+            # title_result_strings = [title for title in title_result]
+            search_result = title_result
+            print(title_result)
         except ValueError:
             print("No results found")
 
