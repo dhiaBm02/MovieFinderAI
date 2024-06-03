@@ -44,7 +44,7 @@
                     // Update the content of the 'actorsContainer' element with the list of actors
                     const overviewContainer = document.getElementById('overviewContainer');
                     const overviewList = data.map(overview => `<li>${overview}</li>`).join('');
-                    overviewContainer.innerHTML = `<h3>Movie Overview:</h3><ul>${overviewList})}</ul>`;
+                    overviewContainer.innerHTML = `<h3>Movie Overview:</h3><ul>${overviewList}</ul>`;
                     overviewContainer.style.display = 'block';
                 })
                 .catch(error => console.error('Error:', error));

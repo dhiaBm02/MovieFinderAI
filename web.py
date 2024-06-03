@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 import rdflib
 from flask import jsonify
 from recommendations_model import recommend,load_data,before_serevr
-
-# from recommendations_model import load_data,recommend
+import pandas as pd
+from recommendations_model import load_data,recommend
 app = Flask(__name__)
 
 # Initialize RDF graph and parse RDF data file
@@ -36,7 +36,7 @@ def search_overview_content(words) -> list:
 def search_overview(title) -> list:
     global g
     query = """
-    PREFIX : <https://www.themoviedb.org/kaggle-export/> 
+    PREFIX : <https://www.themoviedb.org/kaggle-export/>
     SELECT ?overview
     WHERE {
         ?movie a :Movie;

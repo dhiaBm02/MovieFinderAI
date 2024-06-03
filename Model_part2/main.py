@@ -42,7 +42,7 @@ def load_data():
     return df
 
 
-def recommend(text,nn):
+def recommend(text, nn):
     # Generate the embedding for the input 'text' using the 'embed' function
     emb = embed([text])
 
@@ -52,7 +52,6 @@ def recommend(text,nn):
     # Print the titles of the recommended movies based on the nearest neighbors
     for i in neighbors:
         print(movies['Title'].iloc[i])
-
 
 
 if __name__ == '__main__':
@@ -75,4 +74,4 @@ if __name__ == '__main__':
 
     nn.fit(embeddings)
     print("Recommended Movies:")
-    recommend('Batman',nn)
+    recommend('Batman', nn)
